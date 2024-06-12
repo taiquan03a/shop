@@ -123,7 +123,7 @@ a[data-toggle="collapse"] {
     width: 26px;
     height: 26px;
     border-radius: 100%;
-    
+
 }
 
 .sidebar-header img{
@@ -207,8 +207,8 @@ table{
     border: 1px solid gray;
     border-radius: 8px;
     padding: 0px 8px;
-  }
-  
+}
+
 input {
     font-size: 16px;
     outline: none;
