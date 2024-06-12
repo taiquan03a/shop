@@ -13,7 +13,10 @@ import com.example.shoes.service.HoaDonSerVice;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -90,7 +93,7 @@ public class HoaDonImpl implements HoaDonSerVice {
         List<TrangThaiDon> trangThaiDonList = new ArrayList<>();
         List<TrangThaiDon> trangThaiDonChiTietList = trangThaiDonRepository.findAll();
         long idTrangThai = hoaDon.getTrangThaiDon().getID();
-        if(idTrangThai != 4) idTrangThai += 1;
+        if(idTrangThai != 4 && idTrangThai != 5) idTrangThai += 1;
         for(long i = 0; i < idTrangThai; i++){
             trangThaiDonList.add(trangThaiDonChiTietList.get((int)i));
         }
@@ -130,9 +133,13 @@ public class HoaDonImpl implements HoaDonSerVice {
         for(long i = 0; i < idTrangThai; i++){
             trangThaiDonList.add(trangThaiDonChiTietList.get((int)i));
         }
-        idTrangThai = 4;
-        trangThaiDonList.add(trangThaiDonChiTietList.get(3));
+        if(idTrangThai != 4 && idTrangThai != 5) {
+            idTrangThai = 5;
+            trangThaiDonList.add(trangThaiDonChiTietList.get(4));
+        }
+
         hoaDon.setTrangThaiDon(trangThaiDonRepository.findById((int)idTrangThai).get());
+        hoaDonRepository.save(hoaDon);
         String tenGiamGia = "khong dung";
         float giaTriGiamGia = 0;
         if(hoaDon.getGiamGia() != null){
@@ -158,4 +165,81 @@ public class HoaDonImpl implements HoaDonSerVice {
         return hoaDonDetailDTO;
     }
 
+    @Override
+    public List<HoaDonRequest> filterHoaDonRequest(String search, String status, String batDau, String ketThuc) throws ParseException {
+        List<HoaDon> hoaDons = hoaDonRepository.findAll();
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date bd = formatter.parse(batDau);
+        Date kt = formatter.parse(ketThuc);
+        if(search != null && status != null && batDau != null && ketThuc != null) {
+            List<HoaDonRequest> hoaDonRequests = new ArrayList<>();
+            for (HoaDon hoaDon : hoaDons) {
+                if (hoaDon.getKhachHang().getTenKhachHang().contains(search) &&
+                        (hoaDon.getTrangThaiDon().getID() == Long.valueOf(status) || Long.valueOf(status) == 0)&&
+                        hoaDon.getNgayTao().compareTo(bd) > 0 && hoaDon.getNgayTao().compareTo(kt) < 0) {
+                    System.out.println("hihi");
+                    long tongSl = 0, tongTien = 0;
+                    for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTietRepository.findHoaDonChiTietsByHoaDon(hoaDon)) {
+                        tongSl += hoaDonChiTiet.getSoLuong();
+                        tongTien += hoaDonChiTiet.getThanhTien();
+                    }
+                    HoaDonRequest hoaDonRequest = HoaDonRequest.builder()
+                            .ID(hoaDon.getID())
+                            .tenKH(hoaDon.getKhachHang().getTenKhachHang())
+                            .tongSp(tongSl)
+                            .tongTien(tongTien)
+                            .ngayTao(hoaDon.getNgayTao())
+                            .trangThaiDon(hoaDon.getTrangThaiDon().getTenTrangThai())
+                            .build();
+                    hoaDonRequests.add(hoaDonRequest);
+                }
+            }
+            return hoaDonRequests;
+        }else if (search == null && status != null && batDau != null && ketThuc != null) {
+            List<HoaDonRequest> hoaDonRequests = new ArrayList<>();
+            for (HoaDon hoaDon : hoaDons) {
+                if ((hoaDon.getTrangThaiDon().getID() == Long.valueOf(status) || Long.valueOf(status) == 0)&&
+                        hoaDon.getNgayTao().compareTo(bd) > 0 && hoaDon.getNgayTao().compareTo(kt) < 0) {
+                    long tongSl = 0, tongTien = 0;
+                    for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTietRepository.findHoaDonChiTietsByHoaDon(hoaDon)) {
+                        tongSl += hoaDonChiTiet.getSoLuong();
+                        tongTien += hoaDonChiTiet.getThanhTien();
+                    }
+                    HoaDonRequest hoaDonRequest = HoaDonRequest.builder()
+                            .ID(hoaDon.getID())
+                            .tenKH(hoaDon.getKhachHang().getTenKhachHang())
+                            .tongSp(tongSl)
+                            .tongTien(tongTien)
+                            .ngayTao(hoaDon.getNgayTao())
+                            .trangThaiDon(hoaDon.getTrangThaiDon().getTenTrangThai())
+                            .build();
+                    hoaDonRequests.add(hoaDonRequest);
+                }
+            }
+            return hoaDonRequests;
+        } else if (search == null && status == null && batDau != null && ketThuc != null) {
+            List<HoaDonRequest> hoaDonRequests = new ArrayList<>();
+            for (HoaDon hoaDon : hoaDons) {
+                if (hoaDon.getNgayTao().compareTo(bd) > 0 && hoaDon.getNgayTao().compareTo(kt) < 0) {
+                    long tongSl = 0, tongTien = 0;
+                    for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTietRepository.findHoaDonChiTietsByHoaDon(hoaDon)) {
+                        tongSl += hoaDonChiTiet.getSoLuong();
+                        tongTien += hoaDonChiTiet.getThanhTien();
+                    }
+                    HoaDonRequest hoaDonRequest = HoaDonRequest.builder()
+                            .ID(hoaDon.getID())
+                            .tenKH(hoaDon.getKhachHang().getTenKhachHang())
+                            .tongSp(tongSl)
+                            .tongTien(tongTien)
+                            .ngayTao(hoaDon.getNgayTao())
+                            .trangThaiDon(hoaDon.getTrangThaiDon().getTenTrangThai())
+                            .build();
+                    hoaDonRequests.add(hoaDonRequest);
+                }
+            }
+            return hoaDonRequests;
+        }
+        return null;
+    }
 }

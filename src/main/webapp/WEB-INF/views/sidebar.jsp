@@ -45,7 +45,7 @@
                 </li>
                 <li>
                     <img src="/img/order.png" alt="">
-                    <a href="sidebar.html" data-toggle="collapse" aria-expanded="false">Quản lý đơn hàng</a>
+                    <a href="/getDonHang" data-toggle="collapse" aria-expanded="false">Quản lý đơn hàng</a>
                 </li>
                 <li>
                     <img src="/img/sneaker.png" alt="">
@@ -80,7 +80,7 @@
             <!-- content -->
             <div style="width: 100%; background-color: #eee; padding: 20px;">
                 <h3>Quản lý đơn hàng</h3>
-                <form action="">
+                <form action="/filter">
                     <div class="filter">
                         <div class="w-100 first">
                             <div class="text-container align-items-center">
@@ -89,25 +89,23 @@
                             </div>
                             <div>
                                 <select name="status" id="status">
-                                    <option value="0">Trạng thái giao hàng</option>
-                                    <option value="1">Đã hủy</option>
-                                    <option value="2">Chờ xác nhận</option>
-                                    <option value="3">Chờ giao hàng</option>
-                                    <option value="4">Đang vận chuyển</option>
-                                    <option value="5">Chờ thanh toán</option>
-                                    <option value="6">Đã thanh toán</option>
+                                    <option value="0">Tất cả đơn hàng</option>
+                                <c:forEach var="trangThai" items="${trangThais}">
+                                    <option value="${trangThai.ID}">${trangThai.tenTrangThai}</option>
+
+                                </c:forEach>
                                 </select>
                             </div>
                             <div class="d-flex justify-content-between gap-4">
                                 <div class="function">Quét mã</div>
-                                <a href="View/create_order.html"><div class="function">Tạo hóa đơn</div></a>
+                                <a href="/create"><div class="function">Tạo hóa đơn</div></a>
                             </div>
                         </div>
 
                         <div class="w-100 second mt-4">
                             <div class="align-items-center w-50 date">
-                                <input type="date" placeholder="Từ ngày">
-                                <input placeholder="Đến ngày" type="date">
+                                <input name="batDau" type="date" placeholder="Từ ngày">
+                                <input name="ketThuc" placeholder="Đến ngày" type="date">
                             </div>
                             <div class="type d-flex gap-2 align-items-center" style="font-size: 14px;">
                                     <div style="font-weight: 700; margin-bottom: 4px;">Loại:</div>
