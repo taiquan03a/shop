@@ -48,7 +48,7 @@
             </li>
             <li>
                 <img src="/img/order.png" alt="">
-                <a href="/getDonHang" data-toggle="collapse" aria-expanded="false">Quản lý đơn hàng</a>
+                <a href="sidebar.html" data-toggle="collapse" aria-expanded="false">Quản lý đơn hàng</a>
             </li>
             <li>
                 <img src="/img/sneaker.png" alt="">
