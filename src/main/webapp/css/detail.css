@@ -26,8 +26,8 @@ section {
 }
 
 .text div{
-  width: 18%;
-}
+    width: 18%;
+  }
 
 .text p {
   font-size: 12px;
@@ -71,21 +71,21 @@ hr {
 }
 
 .dote div:nth-of-type(4) {
-  left: 50em;
-}
+    left: 50em;
+  }
 
-.dote div:nth-of-type(5) {
-  left: 63.5em;
-}
-
+  .dote div:nth-of-type(5) {
+    left: 63.5em;
+  }
+  
 
 .text div{
-  text-align: center;
+    text-align: center;
 }
 
 .line-bottom{
-  margin-bottom: 20px;
-  border-bottom: 1px solid gray;
+    margin-bottom: 20px;
+    border-bottom: 1px solid gray;
 }
 
 .quantity {
@@ -140,7 +140,4 @@ hr {
 .cancel{
   background-color: red;
   color: #fff;
-}
-#example_wrapper div:nth-child(2) {
-  overflow: auto;
 }
