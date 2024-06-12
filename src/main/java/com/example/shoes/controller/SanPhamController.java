@@ -1,13 +1,13 @@
 package com.example.shoes.controller;
 
+import com.example.shoes.repository.TrangThaiDonRepository;
 import com.example.shoes.service.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.text.ParseException;
 
 @Controller
 @RequestMapping("/")
@@ -17,11 +17,13 @@ public class SanPhamController {
     final private HoaDonSerVice hoaDonSerVice;
     final private SanPhamChiTietService sanPhamChiTietService;
     final private GiamGiaService giamGiaService;
+    final private TrangThaiDonRepository trangThaiDonRepository;
 
     @GetMapping("/getDonHang")
     public String getDonHang(Model model) {
-        System.out.println(hoaDonSerVice.getHoaDonRequests());
+        System.out.println(trangThaiDonRepository.findAll());
         model.addAttribute("hoaDons", hoaDonSerVice.getHoaDonRequests());
+        model.addAttribute("trangThais",trangThaiDonRepository.findAll());
         return "sidebar";
     }
     @GetMapping("donHang/{id}")
@@ -32,8 +34,12 @@ public class SanPhamController {
     }
     @GetMapping("donHangUP/{id}")
     public String postHoaDon(@PathVariable long id, Model model) {
-        System.out.println(1223);
         model.addAttribute("detail",hoaDonSerVice.updateTrangThai(id));
+        return "detail";
+    }
+    @GetMapping("donHangHuy/{id}")
+    public String postHoaDonHuy(@PathVariable long id, Model model) {
+        model.addAttribute("detail",hoaDonSerVice.huyTrangThai(id));
         return "detail";
     }
     @GetMapping("create")
@@ -41,5 +47,17 @@ public class SanPhamController {
         model.addAttribute("sanPhams",sanPhamChiTietService.getSanPhamChiTiet());
         model.addAttribute("giamGias",giamGiaService.getGiamGia());
         return "create_order";
+    }
+    @GetMapping("/filter")
+    public String filter(Model model,
+                         @RequestParam String search,
+                         @RequestParam String status,
+                         @RequestParam String batDau,
+                         @RequestParam String ketThuc
+    ) throws ParseException {
+        model.addAttribute("hoaDons", hoaDonSerVice.filterHoaDonRequest(search,status,batDau,ketThuc));
+        model.addAttribute("trangThais",trangThaiDonRepository.findAll());
+        System.out.println(search+status + batDau + ketThuc);
+        return "sidebar";
     }
 }
