@@ -46,7 +46,7 @@
                 </li>
                 <li>
                     <img src="/img/order.png" alt="">
-                    <a href="/getDonHang" data-toggle="collapse" aria-expanded="false">Quản lý đơn hàng</a>
+                    <a href="sidebar.jsp" data-toggle="collapse" aria-expanded="false">Quản lý đơn hàng</a>
                 </li>
                 <li>
                     <img src="/img/sneaker.png" alt="">
@@ -104,8 +104,8 @@
                     <div class="filter mt-5">
                         <div class="w-100 first">
                             <div class="d-flex justify-content-between gap-4">
-                                <a style="color: #ffa500 !important;" href="http://localhost:8080/donHangUP/${detail.id}" id="confirmBtn" class="function" >Chuyển sang trạng thái kế tiếp</a>
-                                <a style="color: #fff !important;" href="http://localhost:8080/donHangHuy/${detail.id}" id="cancelBtn" class="function cancel" >Hủy Đơn</a>
+                                <button onclick="handleButtonClick('http://localhost:8080/donHangUP/${detail.id}')" id="confirmBtn" class="function" formmethod="post">First</button>
+                                <button onclick="handleButtonClick('http://localhost:8080/donHangUP/{${detail.id}')" id="cancelBtn" class="function" formmethod="post">Second</button>
                             </div>
                         </div>
                     </div>
