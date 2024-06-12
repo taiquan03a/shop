@@ -70,7 +70,7 @@
     </nav>
     <div class="w-100">
         <div class="d-flex justify-content-between w-100 align-items-center nav-bar">
-            <button type="button" id="sidebarCollapse" style="height: 40px; color: black; background-color: none !important;" class="btn">
+            <button type="button" id="sidebarCollapse" style="height: 40px; color: black; background: none !important;" class="btn">
                 <i class="fas fa-align-left"></i>
             </button>
             <div class="d-flex gap-3">
@@ -97,7 +97,7 @@
                                 <div class="modal-body">
                                     <form action="">
                                     </form>
-                                    <div class="w-100 d-flex justify-content-center align-items-center" style="background-color: fff; border-radius: 10px;">
+                                    <div class="w-100 d-flex justify-content-center align-items-center" style="background-color: #fff; border-radius: 10px;">
                                         <table id="example" class="table table-striped p-5" style="width:100%">
                                             <thead>
                                             <tr>
@@ -133,7 +133,7 @@
                                                 <td>${sanPham.hoaTiet.tenDangAo}</td>
                                                 <td>${sanPham.giaBan}</td>
                                                 <td>${sanPham.soLuong}</td>
-                                                <td><a href="#" data-dismiss="modal"><div class="function" onclick="handleSelect(1)">Chọn</div></a></td>
+                                                <td><a href="#" data-dismiss="modal"><div class="function" onclick="handleSelect(${sanPham.ID})">Chọn</div></a></td>
                                             </tr>
                                             </c:forEach>
 
@@ -149,43 +149,27 @@
 
                 </div>
                 <div class="w-100">
-                    <div class="row d-flex align-items-center line-bottom">
+                    <c:forEach var="sanPham" items="${sanPhams}">
+                    <div id="item-${sanPham.ID}" class="row d-flex align-items-center line-bottom">
                         <div class="col-3 d-flex">
                             <img style="width: 60px; height: 60px; margin: auto;" src="/img/sneaker.png" alt="">
                         </div>
-                        <div class="col-3">
-                            <div>KKK Xanh duong</div>
-                            <div style="color: red;">80000 đ</div>
-                            <div>Size 40</div>
-                            <div>x1</div>
-                        </div>
                         <div class="col-2">
-                            <div class="quantity">
-                                <input type="number" onblur="updateQuanlity(1)" id = "1" style="width: 90px;" class="input-box" value="1" min="1">
-                            </div>
-                        </div>
-                        <div class="col-2" style="font-weight: 700; color: red;">240.000 VNĐ</div>
-                        <div class="col-2" style="cursor: pointer; color: red;" onclick="handleButtonDelete(1)"><i class="fa-solid fa-trash"></i></div>
-                    </div>
-                    <div class="row d-flex align-items-center line-bottom">
-                        <div class="col-3 d-flex">
-                            <img style="width: 60px; height: 60px; margin: auto;" src="/img/sneaker.png" alt="">
+                            <div>${sanPham.sanPham.tenSanPham}</div>
+                            <div style="color: red;">${sanPham.giaBan} đ</div>
+                            <div>Size ${sanPham.kichCo.tenKichCo}</div>
+                            <div class="sl-${sanPham.ID}">x1</div>
                         </div>
                         <div class="col-3">
-                            <div>KKK Xanh duong</div>
-                            <div style="color: red;">80000 đ</div>
-                            <div>Size 40</div>
-                            <div>x1</div>
-
-                        </div>
-                        <div class="col-2">
-                            <div class="quantity">
-                                <input type="number" onblur="updateQuanlity(2)" id = "2" style="width: 90px;" class="input-box" value="1" min="1">
+                            <div class="quantity" style="display: block !important;">
+                                <input type="number" onblur="updateQuanlity(${sanPham.ID}, ${sanPham.giaBan}, ${sanPham.soLuong})" id = "${sanPham.ID}" style="width: 125px; margin-right: 210px" class="input-box" value="1" min="1">
+                                <span style="color: red; margin-left: 5px" id="message-${sanPham.ID}"></span>
                             </div>
                         </div>
-                        <div class="col-2" style="font-weight: 700; color: red;">240.000 VNĐ</div>
-                        <div class="col-2" style="cursor: pointer; color: red;" onclick="handleButtonDelete(2)"><i class="fa-solid fa-trash"></i></div>
+                        <div class="col-2 price-${sanPham.ID}" style="font-weight: 700; color: red;"> ${sanPham.giaBan} VNĐ</div>
+                        <div class="col-2" style="cursor: pointer; color: red;" onclick="handleButtonDelete(${sanPham.ID})"><i class="fa-solid fa-trash"></i></div>
                     </div>
+                    </c:forEach>
                 </div>
             </div>
 
@@ -242,10 +226,6 @@
                             <div>Giảm giá</div>
                             <b>250.000 VNĐ</b>
                         </div>
-                        <div class="d-flex mb-3 justify-content-between">
-                            <div>Phí vận chuyển</div>
-                            <b>0 VNĐ</b>
-                        </div>
                         <i>Miễn phí vận chuyển với đơn hàng có giá trị trên 1.000.000vnđ</i>
                         <div class="line-bottom"></div>
                         <div  class="d-flex justify-content-between">
@@ -292,6 +272,8 @@
             }
             localStorage.setItem('quanlity', JSON.stringify(newObject));
             setValueInput();
+            location.reload();
+
         }
     }
 
@@ -306,6 +288,7 @@
 
         localStorage.setItem('quanlity', JSON.stringify(newObject));
         setValueInput()
+        location.reload();
         console.log(localStorage.getItem('quanlity'));
 
     }
@@ -319,11 +302,20 @@
         returnInput.value = isNaN(returnInput.value) ? 0 : change;
     });
 
-    function updateQuanlity(n) {
+    function updateQuanlity(n, price, amount) {
         var idObject = JSON.parse(localStorage.getItem('quanlity'));
         idObject[n] = document.getElementById(n).value;
-        localStorage.setItem('quanlity', JSON.stringify(idObject));
-        setValueInput()
+        if(document.getElementById(n).value < amount){
+            document.getElementById('message-' + n).innerHTML = ''
+            localStorage.setItem('quanlity', JSON.stringify(idObject));
+            document.querySelector(".price-" + n).innerHTML = document.getElementById(n).value * price + " VNĐ";
+            document.querySelector(".sl-" + n).innerHTML = 'x'+document.getElementById(n).value
+            updateTotalPrice()
+            setValueInput()
+        }else{
+            document.getElementById('message-' + n).innerHTML = 'Không đủ hàng!'
+        }
+
     }
 
     function setValueInput(){
@@ -331,5 +323,27 @@
         var inputElement = document.getElementById('list_product');
         inputElement.value = idValue;
         console.log(document.getElementById('list_product').value);
+
     }
+
+    function updateTotalPrice() {
+        console.log(123)
+        totalPrice = 0
+        var listItemSelected = JSON.parse(localStorage.getItem('quanlity'));
+        <c:forEach var="sanPham" items="${sanPhams}">
+        if (!listItemSelected.hasOwnProperty(${sanPham.ID})) {
+            console.log(document.querySelector('.price-${sanPham.ID}').value)
+        }
+        </c:forEach>
+    }
+
+    window.addEventListener('DOMContentLoaded', function () {
+        var listItemSelected = JSON.parse(localStorage.getItem('quanlity'));
+
+        <c:forEach var="sanPham" items="${sanPhams}">
+        if (!listItemSelected.hasOwnProperty(${sanPham.ID})){
+                document.getElementById('item-${sanPham.ID}').classList.add("d-none")
+            }
+        </c:forEach>
+    });
 </script>

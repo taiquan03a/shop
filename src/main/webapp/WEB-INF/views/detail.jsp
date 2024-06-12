@@ -104,8 +104,8 @@
                     <div class="filter mt-5">
                         <div class="w-100 first">
                             <div class="d-flex justify-content-between gap-4">
-                                <button onclick="handleButtonClick('http://localhost:8080/donHangUP/${detail.id}')" id="confirmBtn" class="function" formmethod="post">First</button>
-                                <button onclick="handleButtonClick('http://localhost:8080/donHangUP/{${detail.id}')" id="cancelBtn" class="function" formmethod="post">Second</button>
+                                <a style="color: #ffa500 !important;" href="http://localhost:8080/donHangUP/${detail.id}" id="confirmBtn" class="function" methods="post">Chuyển sang trạng thái kế tiếp</a>
+                                <a style="color: #fff !important;" href="http://localhost:8080/donHangUP/${detail.id}" id="cancelBtn" class="function cancel" methods="post">Hủy Đơn</a>
                             </div>
                         </div>
                     </div>

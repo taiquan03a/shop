@@ -30,10 +30,11 @@ public class SanPhamController {
         model.addAttribute("detail",hoaDonSerVice.getHoaDonDetail(id));
         return "detail";
     }
-    @GetMapping("donHangUP/%7B{id}")
+    @GetMapping("donHangUP/{id}")
     public String postHoaDon(@PathVariable long id, Model model) {
+        System.out.println(1223);
         model.addAttribute("detail",hoaDonSerVice.updateTrangThai(id));
-        return "datail";
+        return "detail";
     }
     @GetMapping("create")
     public String create(Model model) {
