@@ -49,12 +49,18 @@ public class DonHangController {
     }
     @GetMapping("donHangUP/{id}")
     public String postHoaDon(@PathVariable long id, Model model) {
+        UpdateDonHangRequest updateDonHangRequest = new UpdateDonHangRequest();
         model.addAttribute("detail",hoaDonSerVice.updateTrangThai(id));
+        model.addAttribute("sanPhams",sanPhamChiTietService.getSanPhamChiTiet());
+        model.addAttribute("updateDonHangRequest",updateDonHangRequest);
         return "detail";
     }
     @GetMapping("donHangHuy/{id}")
     public String postHoaDonHuy(@PathVariable long id, Model model) {
+        UpdateDonHangRequest updateDonHangRequest = new UpdateDonHangRequest();
         model.addAttribute("detail",hoaDonSerVice.huyTrangThai(id));
+        model.addAttribute("sanPhams",sanPhamChiTietService.getSanPhamChiTiet());
+        model.addAttribute("updateDonHangRequest",updateDonHangRequest);
         return "detail";
     }
     @GetMapping("create")

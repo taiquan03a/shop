@@ -121,6 +121,7 @@ public class HoaDonImpl implements HoaDonSerVice {
                 .tenNguoiNhan(hoaDon.getKhachHang().getTenKhachHang())
                 .trangThai(hoaDon.getTrangThaiDon().getTenTrangThai())
                 .trangThaiDonList(trangThaiDonList)
+                .trangThaiDon(trangThaiDonRepository.findById(idTrangThai).get())
                 .hoaDonChiTietList(hoaDonChiTietRepository.findHoaDonChiTietsByHoaDon(hoaDon))
                 .tenGiamGia(tenGiamGia)
                 .giaTriGiamGia(giaTriGiamGia)
@@ -169,6 +170,7 @@ public class HoaDonImpl implements HoaDonSerVice {
                 .tenNguoiNhan(hoaDon.getKhachHang().getTenKhachHang())
                 .trangThai(hoaDon.getTrangThaiDon().getTenTrangThai())
                 .trangThaiDonList(trangThaiDonList)
+                .trangThaiDon(trangThaiDonRepository.findById(idTrangThai).get())
                 .hoaDonChiTietList(hoaDonChiTietRepository.findHoaDonChiTietsByHoaDon(hoaDon))
                 .tenGiamGia(tenGiamGia)
                 .giaTriGiamGia(giaTriGiamGia)
@@ -419,7 +421,7 @@ public class HoaDonImpl implements HoaDonSerVice {
                 .thoiGianGiaoHang(null)
                 .sdtNguoiNhan(khachHang.getSdt())
                 .trangThaiDon(trangThaiDon)
-                .idStatus("1,")
+                .idStatus("1")
                 .build();
         if(check && giamGia != null){
             hoaDon.setGiamGia(giamGia);
