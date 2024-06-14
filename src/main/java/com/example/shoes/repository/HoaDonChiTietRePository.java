@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface HoaDonChiTietRePository extends JpaRepository<HoaDonChiTiet, Long> {
     List<HoaDonChiTiet> findHoaDonChiTietsByHoaDon (HoaDon hoaDon);
+    void deleteHoaDonChiTietsByHoaDon(HoaDon hoaDon);
+    void deleteAllByHoaDon(HoaDon hoaDon);
 }

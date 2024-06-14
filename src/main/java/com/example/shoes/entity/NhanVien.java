@@ -6,7 +6,7 @@ import lombok.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "Nhanvien")
+@Table(name = "nhan_vien")
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
@@ -17,20 +17,20 @@ public class NhanVien {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long ID;
-    @Column(name = "HoTen")
+    @Column(name = "ho_ten")
     private String hoTen;
     @Column(name = "Email")
     private String email;
-    @Column(name = "MatKhau")
+    @Column(name = "mat_khau")
     private String matKhau;
-    @Column(name = "DiaChi")
+    @Column(name = "dia_chi")
     private String diaChi;
-    @Column(name = "NgayTao")
+    @Column(name = "ngay_tao")
     private Date ngayTao;
     @Column(name = "SDT")
     private String sdt;
     @Column(name = "Anh")
     private String anh;
-    @Column(name = "TrangThai")
+    @Column(name = "trang_thai")
     private String trangThai;
 }

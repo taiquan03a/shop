@@ -18,6 +18,7 @@ public class HoaDonDetailDTO {
     private String trangThai;
     private String tenNguoiNhan;
     private List<TrangThaiDon> trangThaiDonList;
+    private TrangThaiDon trangThaiDon;
     private List<LichSuThanhToan> lichSuThanhToanList;
     private List<HoaDonChiTiet> hoaDonChiTietList;
     private String tenGiamGia;

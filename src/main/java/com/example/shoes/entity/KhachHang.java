@@ -28,7 +28,7 @@ public class KhachHang {
     @Column(name = "ngay_tao")
     private Date ngayTao;
     @Column(name = "trang_thai")
-    private String trangThai;
+    private boolean trangThai;
     @Column(name = "anh")
     private String anh;
     @Column(name = "mat_khau")

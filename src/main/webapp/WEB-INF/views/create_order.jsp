@@ -48,7 +48,7 @@
             </li>
             <li>
                 <img src="/img/order.png" alt="">
-                <a href="sidebar.html" data-toggle="collapse" aria-expanded="false">Quản lý đơn hàng</a>
+                <a href="/getDonHang">Quản lý đơn hàng</a>
             </li>
             <li>
                 <img src="/img/sneaker.png" alt="">
@@ -70,7 +70,7 @@
     </nav>
     <div class="w-100">
         <div class="d-flex justify-content-between w-100 align-items-center nav-bar">
-            <button type="button" id="sidebarCollapse" style="height: 40px; color: black; background-color: none !important;" class="btn">
+            <button type="button" id="sidebarCollapse" style="height: 40px; color: black; background: none !important;" class="btn">
                 <i class="fas fa-align-left"></i>
             </button>
             <div class="d-flex gap-3">
@@ -97,7 +97,7 @@
                                 <div class="modal-body">
                                     <form action="">
                                     </form>
-                                    <div class="w-100 d-flex justify-content-center align-items-center" style="background-color: fff; border-radius: 10px;">
+                                    <div class="w-100 d-flex justify-content-center align-items-center" style="background-color: #fff; border-radius: 10px;">
                                         <table id="example" class="table table-striped p-5" style="width:100%">
                                             <thead>
                                             <tr>
@@ -133,7 +133,7 @@
                                                 <td>${sanPham.hoaTiet.tenDangAo}</td>
                                                 <td>${sanPham.giaBan}</td>
                                                 <td>${sanPham.soLuong}</td>
-                                                <td><a href="#" data-dismiss="modal"><div class="function" onclick="handleSelect(1)">Chọn</div></a></td>
+                                                <td><a href="#" data-dismiss="modal"><div class="function" onclick="handleSelect(${sanPham.ID})">Chọn</div></a></td>
                                             </tr>
                                             </c:forEach>
 
@@ -149,43 +149,27 @@
 
                 </div>
                 <div class="w-100">
-                    <div class="row d-flex align-items-center line-bottom">
-                        <div class="col-3 d-flex">
-                            <img style="width: 60px; height: 60px; margin: auto;" src="/img/sneaker.png" alt="">
-                        </div>
-                        <div class="col-3">
-                            <div>KKK Xanh duong</div>
-                            <div style="color: red;">80000 đ</div>
-                            <div>Size 40</div>
-                            <div>x1</div>
-                        </div>
-                        <div class="col-2">
-                            <div class="quantity">
-                                <input type="number" onblur="updateQuanlity(1)" id = "1" style="width: 90px;" class="input-box" value="1" min="1">
+                    <c:forEach var="sanPham" items="${sanPhams}">
+                        <div id="item-${sanPham.ID}" class="row d-flex align-items-center line-bottom d-none">
+                            <div class="col-3 d-flex">
+                                <img style="width: 60px; height: 60px; margin: auto;" src="/img/sneaker.png" alt="">
                             </div>
-                        </div>
-                        <div class="col-2" style="font-weight: 700; color: red;">240.000 VNĐ</div>
-                        <div class="col-2" style="cursor: pointer; color: red;" onclick="handleButtonDelete(1)"><i class="fa-solid fa-trash"></i></div>
-                    </div>
-                    <div class="row d-flex align-items-center line-bottom">
-                        <div class="col-3 d-flex">
-                            <img style="width: 60px; height: 60px; margin: auto;" src="/img/sneaker.png" alt="">
-                        </div>
-                        <div class="col-3">
-                            <div>KKK Xanh duong</div>
-                            <div style="color: red;">80000 đ</div>
-                            <div>Size 40</div>
-                            <div>x1</div>
-
-                        </div>
-                        <div class="col-2">
-                            <div class="quantity">
-                                <input type="number" onblur="updateQuanlity(2)" id = "2" style="width: 90px;" class="input-box" value="1" min="1">
+                            <div class="col-2">
+                                <div>${sanPham.sanPham.tenSanPham}</div>
+                                <div style="color: red;">${sanPham.giaBan} đ</div>
+                                <div>Size ${sanPham.kichCo.tenKichCo}</div>
+                                <div class="sl-${sanPham.ID}">x1</div>
                             </div>
+                            <div class="col-3">
+                                <div class="quantity" style="display: block !important;">
+                                    <input type="number" onblur="updateQuanlity(${sanPham.ID}, ${sanPham.giaBan}, ${sanPham.soLuong})" id = "${sanPham.ID}" style="width: 125px; margin-right: 210px" class="input-box" value="1" min="1">
+                                    <span style="color: red; margin-left: 5px" id="message-${sanPham.ID}"></span>
+                                </div>
+                            </div>
+                            <div class="col-2 price-${sanPham.ID}" style="font-weight: 700; color: red;"> ${sanPham.giaBan} VNĐ</div>
+                            <div class="col-2" style="cursor: pointer; color: red;" onclick="handleButtonDelete(${sanPham.ID})"><i class="fa-solid fa-trash"></i></div>
                         </div>
-                        <div class="col-2" style="font-weight: 700; color: red;">240.000 VNĐ</div>
-                        <div class="col-2" style="cursor: pointer; color: red;" onclick="handleButtonDelete(2)"><i class="fa-solid fa-trash"></i></div>
-                    </div>
+                    </c:forEach>
                 </div>
             </div>
 
@@ -193,9 +177,9 @@
                 <div class="d-flex justify-content-between line-bottom">
                     <h3 style=" padding-bottom: 15px;">Thông tin khách hàng</h3>
                 </div>
-                <div class="row d-flex justify-content-between">
-                    <div class="col-6">
-                        <form>
+                <form:form action="create" id="myForm" method="post" enctype="multipart/form-data" modelAttribute="createDonHangRequest">
+                    <div class="row d-flex justify-content-between">
+                        <div class="col-6">
                             <div class="mb-3">
                                 <label for="exampleInputEmail1" class="form-label">Tên khách hàng</label>
                                 <input type="text" name="name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" required>
@@ -213,47 +197,45 @@
                             </div>
                             <div class="mb-3">
                                 <label for="exampleInputPassword1" class="form-label">Tiền khách trả</label>
-                                <input type="number" name="phone" class="form-control" id="total_price" required>
+                                <input type="number" name="phone1" class="form-control" id="total_price" required>
                                 <label for="exampleInputPassword1" class="form-label">Còn Dư</label>
-                                <input type="number" name="phone" value="0" class="form-control" id="return" readonly>
+                                <input type="number" name="phone2" value="0" class="form-control" id="return" readonly>
                             </div>
-                            <div class="mb-3" style="display: block;">
+                            <div class="mb-3" style="display: none;">
                                 <label for="exampleInputPassword1" class="form-label"></label>
-                                <input type="text" name="list_product" value="" class="form-control" id="list_product">
+                                <input type="text" name="list_product" path="listProduct" value="" class="form-control" id="list_product">
                             </div>
                             <div class="mb-3">
                                 <label for="exampleInputPassword1" class="form-label">Ghi chú</label>
                                 <textarea id="w3review" name="note" rows="4" class="w-100" required></textarea>
                             </div>
-                            <button style="background-color: #ffa500;" type="submit" class="btn btn-primary">Xác nhận</button>
-                        </form>
-                    </div>
+                            <button id="btn-submit" style="background-color: #ffa500;" type="submit" class="btn btn-primary">Xác nhận</button>
 
-                    <div class="col-4">
-                        <div class="d-flex mb-3 gap-3">
-                            <input style="padding: 5px 5px; border-radius: 4px; width: 48%; border: 2px solid #ccc;" type="text" placeholder="Mã giảm giá">
-                            <input style="padding: 5px 5px; border-radius: 4px; width: 48%; border: 2px solid #ccc;" type="text" placeholder="Phần trăm giảm giá" readonly>
                         </div>
-                        <div class="d-flex mb-3 justify-content-between">
-                            <div>Tổng tiền hàng</div>
-                            <b>2.377.232 VNĐ</b>
-                        </div>
-                        <div class="d-flex mb-3 justify-content-between">
-                            <div>Giảm giá</div>
-                            <b>250.000 VNĐ</b>
-                        </div>
-                        <div class="d-flex mb-3 justify-content-between">
-                            <div>Phí vận chuyển</div>
-                            <b>0 VNĐ</b>
-                        </div>
-                        <i>Miễn phí vận chuyển với đơn hàng có giá trị trên 1.000.000vnđ</i>
-                        <div class="line-bottom"></div>
-                        <div  class="d-flex justify-content-between">
-                            <b>Tổng tiền</b>
-                            <b style="color: red;">2.123.323 VND</b>
+
+                        <div class="col-4">
+                            <div class="d-flex mb-3 gap-3">
+                                <input onblur="checkDiscount(this)" name="discount_name" style="padding: 5px 5px; border-radius: 4px; width: 48%; border: 2px solid #ccc;" type="text" placeholder="Mã giảm giá">
+                                <span style="margin-left: 5px; color: red" id="discount-message"></span>
+                                <input id="discount-percent" style="padding: 5px 5px; border-radius: 4px; width: 48%; border: 2px solid #ccc;" type="text" placeholder="Phần trăm giảm giá" readonly>
+                            </div>
+                            <div class="d-flex mb-3 justify-content-between">
+                                <div>Tổng tiền hàng</div>
+                                <b class="total-items-price"></b>
+                            </div>
+                            <div class="d-flex mb-3 justify-content-between">
+                                <div>Giảm giá</div>
+                                <b id="money-discount">0 VND</b>
+                            </div>
+                            <i>Miễn phí vận chuyển với đơn hàng có giá trị trên 1.000.000vnđ</i>
+                            <div class="line-bottom"></div>
+                            <div  class="d-flex justify-content-between">
+                                <b>Tổng tiền</b>
+                                <b style="color: red;" id = "prices">0 VND</b>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </form:form>
             </div>
 
         </div>
@@ -279,6 +261,9 @@
 </script>
 
 <script>
+    updateTotalPrice()
+    getListSelected()
+    setValueInput()
     function handleButtonDelete(s) {
         console.log(localStorage.getItem('id'));
         if( ! confirm("Bạn có muốn xóa sản phẩm này?") ){
@@ -292,6 +277,7 @@
             }
             localStorage.setItem('quanlity', JSON.stringify(newObject));
             setValueInput();
+            location.reload();
         }
     }
 
@@ -306,30 +292,99 @@
 
         localStorage.setItem('quanlity', JSON.stringify(newObject));
         setValueInput()
-        console.log(localStorage.getItem('quanlity'));
-
+        location.reload();
     }
 
     var totalPriceInput = document.getElementById('total_price');
     var returnInput = document.getElementById('return');
-    var totalPrice = 1000000;
     totalPriceInput.addEventListener('input', function() {
+        var totalPrice = parseInt(localStorage.getItem('price_items'))
         var customerPayment = parseFloat(totalPriceInput.value);
         var change = customerPayment - totalPrice;
         returnInput.value = isNaN(returnInput.value) ? 0 : change;
     });
 
-    function updateQuanlity(n) {
+    function updateQuanlity(n, price, amount) {
         var idObject = JSON.parse(localStorage.getItem('quanlity'));
         idObject[n] = document.getElementById(n).value;
-        localStorage.setItem('quanlity', JSON.stringify(idObject));
-        setValueInput()
+        if(document.getElementById(n).value < amount){
+            document.getElementById('message-' + n).innerHTML = ''
+            localStorage.setItem('quanlity', JSON.stringify(idObject));
+            document.querySelector(".price-" + n).innerHTML = document.getElementById(n).value * price + " VNĐ";
+            document.querySelector(".sl-" + n).innerHTML = 'x'+document.getElementById(n).value
+            updateTotalPrice()
+            setValueInput()
+        }else{
+            document.getElementById('message-' + n).innerHTML = 'Không đủ hàng!'
+        }
+
     }
 
     function setValueInput(){
         var idValue = localStorage.getItem('quanlity');
         var inputElement = document.getElementById('list_product');
         inputElement.value = idValue;
-        console.log(document.getElementById('list_product').value);
     }
+
+    function getListSelected(){
+        var listItemSelected = JSON.parse(localStorage.getItem('quanlity')) ?? {};
+
+        <c:forEach var="sanPham" items="${sanPhams}">
+        if (listItemSelected.hasOwnProperty(${sanPham.ID})){
+            document.getElementById('item-${sanPham.ID}').classList.remove("d-none")
+        }
+        </c:forEach>
+    }
+    function updateTotalPrice() {
+        totalPrice = 0
+        var listItemSelected = JSON.parse(localStorage.getItem('quanlity')) ?? {};
+        <c:forEach var="sanPham" items="${sanPhams}">
+        if (listItemSelected.hasOwnProperty(${sanPham.ID})) {
+            var s =  (document.querySelector('.price-${sanPham.ID}').innerText).trim()
+            var priceValue = s.split(" ")[0];
+            totalPrice += parseInt(priceValue)
+        }
+        </c:forEach>
+        localStorage.setItem('price_items', totalPrice)
+        document.querySelector(".total-items-price").innerHTML = totalPrice + " VNĐ"
+        document.getElementById('prices').innerHTML = totalPrice + " VNĐ"
+    }
+
+    function checkDiscount(e) {
+        var percent = 0;
+        <c:forEach var="giamGia" items="${giamGias}">
+        if (e.value === "${giamGia.tenGiamGia}"){
+            percent = ${giamGia.giaTriGiamGia}
+        }
+        </c:forEach>
+        if(percent === 0){
+            document.getElementById('discount-message').innerHTML = 'Không hợp lệ'
+            document.getElementById('discount-percent').value = ''
+            document.getElementById('prices').innerHTML = localStorage.getItem('price_items') + " VNĐ"
+            document.getElementById('money-discount').innerHTML = 0 + " VNĐ"
+
+        }
+        else{
+            document.getElementById('discount-message').innerHTML = ''
+            document.getElementById('discount-percent').value = percent
+            document.getElementById('prices').innerHTML = localStorage.getItem('price_items') * (1-percent/100) + " VNĐ"
+            document.getElementById('money-discount').innerHTML = localStorage.getItem('price_items') * (percent/100) + " VNĐ"
+            localStorage.setItem('price_items', JSON.stringify(localStorage.getItem('price_items') * (1-percent/100)))
+        }
+    }
+</script>
+
+<script>
+    var btnSubmit = document.getElementById('btn-submit');
+    var form = document.getElementById('myForm');
+    btnSubmit.addEventListener('click', function(event) {
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            alert("Vui lòng điền đầy đủ thông tin!");
+        }else{
+            localStorage.clear();
+            event.target.form.submit();
+        }
+
+    });
 </script>

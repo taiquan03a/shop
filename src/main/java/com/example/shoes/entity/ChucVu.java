@@ -15,10 +15,10 @@ public class ChucVu {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long ID;
-    @Column(name = "TenChucVu")
+    @Column(name = "ten_chuc_vu")
     private String tenChucVu;
-    @Column(name = "GhiChu")
+    @Column(name = "ghi_chu")
     private String ghiChu;
-    @Column(name = "TrangThai")
+    @Column(name = "trang_thai")
     private String trangThai;
 }

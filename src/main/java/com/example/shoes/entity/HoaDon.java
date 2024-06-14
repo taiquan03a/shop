@@ -11,7 +11,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @Setter
-
+@Builder
 public class HoaDon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +28,7 @@ public class HoaDon {
     @Column(name = "tong_tien_don_hang")
     private Float tongTienDonHang;
     @Column(name = "tien_giam_gia")
-    private Long tienGiamGia;
+    private Float tienGiamGia;
     @Column(name = "thanh_tien")
     private Float thanhTien;
     @Column(name = "hinh_thuc_thanh_toan")
@@ -43,6 +43,8 @@ public class HoaDon {
     private String sdtNguoiNhan;
     @Column(name = "nguoi_thanh_toan")
     private String nguoiThanhToan;
+    @Column(name = "id_status")
+    private String idStatus;
 
 //    @OneToMany(mappedBy = "hoa_don", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 //    List<HoaDonChiTietRepository> hoaDonChiTiets = new ArrayList<>();

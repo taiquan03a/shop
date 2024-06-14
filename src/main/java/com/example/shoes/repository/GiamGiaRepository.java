@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface GiamGiaRepository extends JpaRepository<GiamGia, Long> {
+    GiamGia findGiamGiaByTenGiamGia(String tenGiamGia);
 }

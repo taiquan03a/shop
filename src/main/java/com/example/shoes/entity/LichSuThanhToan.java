@@ -1,13 +1,18 @@
 package com.example.shoes.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Entity
 @Table(name = "lich_su_hoa_don")
 @Data
+@Builder
+@AllArgsConstructor
 public class LichSuThanhToan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,4 +36,8 @@ public class LichSuThanhToan {
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_hoa_don")
     private HoaDon hoaDon;
+
+    public LichSuThanhToan() {
+
+    }
 }

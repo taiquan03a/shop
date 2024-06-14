@@ -9,6 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @Setter
 @Getter
+@Builder
 @ToString
 public class HoaDonChiTiet {
     @Id
@@ -22,7 +23,7 @@ public class HoaDonChiTiet {
     @Column(name = "thanh_tien")
     private Long thanhTien;
     @Column(name = "trang_thai")
-    private String trangThai;
+    private boolean trangThai;
 
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_hoa_don")
