@@ -188,9 +188,13 @@ public class HoaDonImpl implements HoaDonSerVice {
         List<HoaDon> hoaDons = hoaDonRepository.findAll();
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        Date bd = formatter.parse(batDau);
-        Date kt = formatter.parse(ketThuc);
-        if(search != null && status != null && batDau != null && ketThuc != null) {
+        Date bd = null,kt = null ;
+        if(!batDau.isEmpty() && !ketThuc.isEmpty()){
+            bd = formatter.parse(batDau);
+            kt = formatter.parse(ketThuc);
+        }
+
+        if(search != null && status != null && !batDau.isEmpty() && !ketThuc.isEmpty()) {
             List<HoaDonRequest> hoaDonRequests = new ArrayList<>();
             for (HoaDon hoaDon : hoaDons) {
                 if (hoaDon.getKhachHang().getTenKhachHang().contains(search) &&
@@ -214,7 +218,7 @@ public class HoaDonImpl implements HoaDonSerVice {
                 }
             }
             return hoaDonRequests;
-        }else if (search == null && status != null && batDau != null && ketThuc != null) {
+        }else if (search == null && status != null && !batDau.isEmpty() && !ketThuc.isEmpty()) {
             List<HoaDonRequest> hoaDonRequests = new ArrayList<>();
             for (HoaDon hoaDon : hoaDons) {
                 if ((hoaDon.getTrangThaiDon().getID() == Long.valueOf(status) || Long.valueOf(status) == 0)&&
@@ -236,7 +240,7 @@ public class HoaDonImpl implements HoaDonSerVice {
                 }
             }
             return hoaDonRequests;
-        } else if (search == null && status == null && batDau != null && ketThuc != null) {
+        } else if (search == null && status == null && !batDau.isEmpty() && !ketThuc.isEmpty()) {
             List<HoaDonRequest> hoaDonRequests = new ArrayList<>();
             for (HoaDon hoaDon : hoaDons) {
                 if (hoaDon.getNgayTao().compareTo(bd) > 0 && hoaDon.getNgayTao().compareTo(kt) < 0) {
@@ -257,7 +261,7 @@ public class HoaDonImpl implements HoaDonSerVice {
                 }
             }
             return hoaDonRequests;
-        }else if (search != null && status == null && batDau == null && ketThuc == null){
+        }else if (search != null && status == null && batDau.isEmpty() && ketThuc.isEmpty()){
             List<HoaDonRequest> hoaDonRequests = new ArrayList<>();
             for (HoaDon hoaDon : hoaDons) {
                 if (hoaDon.getKhachHang().getTenKhachHang().contains(search)) {
@@ -278,7 +282,7 @@ public class HoaDonImpl implements HoaDonSerVice {
                 }
             }
             return hoaDonRequests;
-        } else if (search == null && status != null && batDau == null && ketThuc == null) {
+        } else if (search == null && status != null && batDau.isEmpty() && ketThuc.isEmpty()) {
             List<HoaDonRequest> hoaDonRequests = new ArrayList<>();
             for (HoaDon hoaDon : hoaDons) {
                 if (hoaDon.getTrangThaiDon().getID() == Long.valueOf(status) || Long.valueOf(status) == 0) {
@@ -299,7 +303,7 @@ public class HoaDonImpl implements HoaDonSerVice {
                 }
             }
             return hoaDonRequests;
-        }else if (search != null && status == null && batDau != null && ketThuc != null) {
+        }else if (search != null && status == null && !batDau.isEmpty() && !ketThuc.isEmpty()) {
             List<HoaDonRequest> hoaDonRequests = new ArrayList<>();
             for (HoaDon hoaDon : hoaDons) {
                 if (hoaDon.getKhachHang().getTenKhachHang().contains(search) &&
@@ -321,7 +325,7 @@ public class HoaDonImpl implements HoaDonSerVice {
                 }
             }
             return hoaDonRequests;
-        } else if (search != null && status != null && batDau == null && ketThuc == null) {
+        } else if (search != null && status != null && batDau.isEmpty() && ketThuc.isEmpty()) {
             List<HoaDonRequest> hoaDonRequests = new ArrayList<>();
             for (HoaDon hoaDon : hoaDons) {
                 if (hoaDon.getKhachHang().getTenKhachHang().contains(search) &&

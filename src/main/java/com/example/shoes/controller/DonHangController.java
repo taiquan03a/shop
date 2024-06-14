@@ -78,6 +78,7 @@ public class DonHangController {
                          @RequestParam String batDau,
                          @RequestParam String ketThuc
     ) throws ParseException {
+        System.out.println(batDau + " " + ketThuc);
         model.addAttribute("hoaDons", hoaDonSerVice.filterHoaDonRequest(search,status,batDau,ketThuc));
         model.addAttribute("trangThais",trangThaiDonRepository.findAll());
         System.out.println(search+status + batDau + ketThuc);
