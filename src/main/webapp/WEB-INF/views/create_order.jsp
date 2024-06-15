@@ -301,8 +301,9 @@
     var totalPriceInput = document.getElementById('total_price');
     var returnInput = document.getElementById('return');
     totalPriceInput.addEventListener('input', function() {
-        var totalPrice = parseInt(localStorage.getItem('price_items'))
         var customerPayment = parseFloat(totalPriceInput.value);
+        var s =  (document.getElementById('prices').innerText).trim()
+        var totalPrice = parseInt(s.split(" ")[0]);
         var change = customerPayment - totalPrice;
         returnInput.value = isNaN(returnInput.value) ? 0 : change;
     });
