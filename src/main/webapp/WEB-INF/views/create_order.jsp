@@ -215,7 +215,7 @@
 
                         <div class="col-4">
                             <div class="d-flex mb-3 gap-3">
-                                <input onblur="checkDiscount(this)" name="discount_name" style="padding: 5px 5px; border-radius: 4px; width: 48%; border: 2px solid #ccc;" type="text" placeholder="Mã giảm giá">
+                                <input id="discount" onblur="checkDiscount()" name="discount_name" style="padding: 5px 5px; border-radius: 4px; width: 48%; border: 2px solid #ccc;" type="text" placeholder="Mã giảm giá">
                                 <span style="margin-left: 5px; color: red" id="discount-message"></span>
                                 <input id="discount-percent" style="padding: 5px 5px; border-radius: 4px; width: 48%; border: 2px solid #ccc;" type="text" placeholder="Phần trăm giảm giá" readonly>
                             </div>
@@ -261,6 +261,7 @@
 </script>
 
 <script>
+    localStorage.clear();
     updateTotalPrice()
     getListSelected()
     setValueInput()
@@ -277,7 +278,8 @@
             }
             localStorage.setItem('quanlity', JSON.stringify(newObject));
             setValueInput();
-            location.reload();
+            document.getElementById('item-' + s).classList.add("d-none")
+            updateTotalPrice()
         }
     }
 
@@ -291,8 +293,9 @@
         }
 
         localStorage.setItem('quanlity', JSON.stringify(newObject));
+        document.getElementById('item-' + s).classList.remove("d-none")
         setValueInput()
-        location.reload();
+        updateTotalPrice()
     }
 
     var totalPriceInput = document.getElementById('total_price');
@@ -348,43 +351,28 @@
         localStorage.setItem('price_items', totalPrice)
         document.querySelector(".total-items-price").innerHTML = totalPrice + " VNĐ"
         document.getElementById('prices').innerHTML = totalPrice + " VNĐ"
+        checkDiscount(1)
     }
 
-    function checkDiscount(e) {
+    function checkDiscount(check = 0) {
+        e = document.getElementById('discount')
         var percent = 0;
         <c:forEach var="giamGia" items="${giamGias}">
         if (e.value === "${giamGia.tenGiamGia}"){
             percent = ${giamGia.giaTriGiamGia}
         }
         </c:forEach>
-        if(percent === 0){
+        if(percent === 0 && check === 0){
             document.getElementById('discount-message').innerHTML = 'Không hợp lệ'
             document.getElementById('discount-percent').value = ''
             document.getElementById('prices').innerHTML = localStorage.getItem('price_items') + " VNĐ"
             document.getElementById('money-discount').innerHTML = 0 + " VNĐ"
-
         }
         else{
             document.getElementById('discount-message').innerHTML = ''
             document.getElementById('discount-percent').value = percent
-            document.getElementById('prices').innerHTML = localStorage.getItem('price_items') * (1-percent/100) + " VNĐ"
+            document.getElementById('prices').innerHTML = Math.round(localStorage.getItem('price_items') * (1-percent/100)) + " VNĐ"
             document.getElementById('money-discount').innerHTML = localStorage.getItem('price_items') * (percent/100) + " VNĐ"
-            localStorage.setItem('price_items', JSON.stringify(localStorage.getItem('price_items') * (1-percent/100)))
         }
     }
-</script>
-
-<script>
-    var btnSubmit = document.getElementById('btn-submit');
-    var form = document.getElementById('myForm');
-    btnSubmit.addEventListener('click', function(event) {
-        if (!form.checkValidity()) {
-            event.preventDefault();
-            alert("Vui lòng điền đầy đủ thông tin!");
-        }else{
-            localStorage.clear();
-            event.target.form.submit();
-        }
-
-    });
 </script>
