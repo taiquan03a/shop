@@ -137,9 +137,9 @@
                     </tr>
                     </thead>
                     <tbody class="index">
-                    <c:forEach var="hoaDon" items="${hoaDons}">
+                    <c:forEach var="hoaDon" items="${hoaDons}" varStatus="loop">
                     <tr>
-                        <td>1</td>
+                        <td> ${loop.index+1} </td>
                         <td>${hoaDon.ID}</td>
                         <td>${hoaDon.tongSp}</td>
                         <td>${hoaDon.tongTien}</td>
