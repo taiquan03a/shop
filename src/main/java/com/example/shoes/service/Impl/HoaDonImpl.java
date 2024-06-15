@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -48,6 +49,15 @@ public class HoaDonImpl implements HoaDonSerVice {
                     .build();
             hoaDonRequests.add(hoaDonRequest);
         }
+        hoaDonRequests.sort(new Comparator<HoaDonRequest>() {
+            @Override
+            public int compare(HoaDonRequest o1, HoaDonRequest o2) {
+                if(o1.getID() < o2.getID()){
+                    return 1;
+                }
+                return -1;
+            }
+        });
         return hoaDonRequests;
     }
 
@@ -409,7 +419,7 @@ public class HoaDonImpl implements HoaDonSerVice {
         if(createDonHangRequest.getType().equals("2")){
             hinhThuc = "Tiền mặt";
         }else{
-            hinhThuc = "chuyển khoản";
+            hinhThuc = "Chuyển khoản";
         }
         TrangThaiDon trangThaiDon = trangThaiDonRepository.findById(1L).get();
         HoaDon hoaDon = HoaDon.builder()
