@@ -405,16 +405,17 @@ public class HoaDonImpl implements HoaDonSerVice {
                     .build();
             hoaDonChiTietList.add(hoaDonChiTiet);
         }
-        long tongTienDonHang = 0;
-        float tienGiamGia = 0,thanhTien = 0;;
+        long tongTienDonHang = 0,giamGiaNguyen = 0,thanhTien = 0;
+        float tienGiamGia = 0;
         for(HoaDonChiTiet hd : hoaDonChiTietList){
             tongTienDonHang += hd.getThanhTien();
         }
         if(giamGia != null){
             tienGiamGia =(float) tongTienDonHang*giamGia.getGiaTriGiamGia()/100;
+            giamGiaNguyen = Math.round(tienGiamGia);
         }
 
-        thanhTien = tongTienDonHang - tienGiamGia;
+        thanhTien = tongTienDonHang - giamGiaNguyen;
         String hinhThuc = "";
         if(createDonHangRequest.getType().equals("2")){
             hinhThuc = "Tiền mặt";
@@ -426,8 +427,8 @@ public class HoaDonImpl implements HoaDonSerVice {
                 .khachHang(khachHang)
                 .ngayTao(new Date())
                 .nguoiTao(nhanVien.getHoTen())
-                .tongTienDonHang((float) tongTienDonHang)
-                .tienGiamGia(tienGiamGia)
+                .tongTienDonHang(tongTienDonHang)
+                .tienGiamGia(giamGiaNguyen)
                 .thanhTien((thanhTien))
                 .hinhThucThanhToan(hinhThuc)
                 .phiVanChuyen(0F)
@@ -487,17 +488,20 @@ public class HoaDonImpl implements HoaDonSerVice {
             hoaDonChiTietRepository.save(hoaDonChiTiet);
             hoaDonChiTietList.add(hoaDonChiTiet);
         }
-        long tongTienDonHang = 0;
-        float tienGiamGia = 0,thanhTien = 0;;
+        long tongTienDonHang = 0,giamGiaNguyen = 0,thanhTien = 0;
+        float tienGiamGia = 0;
         for(HoaDonChiTiet hd : hoaDonChiTietList){
             tongTienDonHang += hd.getThanhTien();
         }
         if(hoaDon.getGiamGia() != null){
             tienGiamGia =(float) tongTienDonHang*hoaDon.getGiamGia().getGiaTriGiamGia()/100;
+            giamGiaNguyen = Math.round(tienGiamGia);
         }
-        thanhTien = tongTienDonHang - tienGiamGia;
-        hoaDon.setTongTienDonHang((float) tongTienDonHang);
-        hoaDon.setTienGiamGia(tienGiamGia);
+
+        thanhTien = tongTienDonHang - giamGiaNguyen;
+        thanhTien = tongTienDonHang - giamGiaNguyen;
+        hoaDon.setTongTienDonHang((tongTienDonHang));
+        hoaDon.setTienGiamGia(giamGiaNguyen);
         hoaDon.setThanhTien(thanhTien);
         hoaDonRepository.save(hoaDon);
         return true;
