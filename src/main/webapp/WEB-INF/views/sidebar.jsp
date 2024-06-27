@@ -126,7 +126,7 @@
                     <thead>
                     <tr>
                         <th>#</th>
-                        <th>Mã</th>
+                        <th>Mã hóa đơn</th>
                         <th>Tổng SP</th>
                         <th>Tổng số tiền</th>
                         <th>Tên khách hàng</th>

@@ -107,7 +107,7 @@
             <div class="filter mt-5">
                 <div class="w-100 first">
                     <c:choose>
-                        <c:when test="${3 < 5}">
+                        <c:when test="${detail.trangThaiDon.ID < 3}">
                             <div class="d-flex justify-content-between gap-4">
                                 <a style="color: #ffa500 !important;" href="http://localhost:8080/donHangUP/${detail.id}" id="confirmBtn" class="function" >Chuyển sang trạng thái kế tiếp</a>
                                 <a style="color: #fff !important;" href="http://localhost:8080/donHangHuy/${detail.id}" id="cancelBtn" class="function cancel" >Hủy Đơn</a>
@@ -254,7 +254,7 @@
                             <div class="col-3">
                                 <div class="quantity" style="display: block">
                                     <input style="width: 100px;" onblur="updateQuanlity(${hoaDon.sanPhamChiTiet.ID}, ${hoaDon.donGia}, ${hoaDon.sanPhamChiTiet.soLuong})" id = "${hoaDon.sanPhamChiTiet.ID}"
-                                           type="number" class="input-box" value="${hoaDon.soLuong}" min="1" max="100">
+                                           type="number" class="input-box" value="${hoaDon.soLuong}" min="1" max="100" <c:if test="${detail.trangThaiDon.ID >= 3}"> readonly </c:if> >
                                     <span style="color: red; margin-left: 5px" id="message-${hoaDon.sanPhamChiTiet.ID}"></span>
                                 </div>
                             </div>
