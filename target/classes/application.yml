@@ -3,7 +3,10 @@ spring:
     password: 123
     url: jdbc:sqlserver://localhost:1433;databaseName=shop;encrypt=true;trustServerCertificate=true;
     username: sa
-#  jpa:
+  jackson:
+    date-format: HH:mm:ss dd/MM/yyyy
+    time-zone: GMT+7
+  #  jpa:
 #    hibernate:
 #      ddl-auto: update
 #    database-platform: org.hibernate.dialect.H2Dialect
@@ -11,3 +14,4 @@ spring:
     view:
       prefix: /WEB-INF/views/
       suffix: .jsp
+

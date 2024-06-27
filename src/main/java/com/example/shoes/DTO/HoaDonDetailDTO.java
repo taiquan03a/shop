@@ -13,11 +13,12 @@ import lombok.Data;
 @Builder
 public class HoaDonDetailDTO {
     private Long id;
+    private String maHoaDon;
     private String tenKH;
     private String sdt;
     private String trangThai;
     private String tenNguoiNhan;
-    private List<TrangThaiDon> trangThaiDonList;
+    private List<TimeLineDTO> timeLineDTOList;
     private TrangThaiDon trangThaiDon;
     private List<LichSuThanhToan> lichSuThanhToanList;
     private List<HoaDonChiTiet> hoaDonChiTietList;

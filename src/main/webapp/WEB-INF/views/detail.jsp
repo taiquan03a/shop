@@ -82,13 +82,14 @@
 
         <!-- content -->
         <div style="width: 100%; background-color: #eee; padding: 20px;">
-            <h3>Quản lý đơn hàng / HD10</h3>
+            <h3>Quản lý đơn hàng / ${detail.maHoaDon}</h3>
             <section class="mt-5">
                 <h3 style="margin-top: -30px; padding-bottom: 15px;" class="line-bottom">Lịch sử đơn hàng</h3>
                 <div class="text">
-                    <c:forEach var="trangThai" items="${detail.trangThaiDonList}">
+                    <c:forEach var="trangThai" items="${detail.timeLineDTOList}">
                         <div class="one">
-                            <h4>${trangThai.tenTrangThai}</h4>
+                            <h4>${trangThai.trangThaiDon.tenTrangThai}</h4>
+                            <p>${trangThai.time}</p>
                         </div>
                     </c:forEach>
                 </div>

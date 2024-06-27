@@ -140,7 +140,7 @@
                     <c:forEach var="hoaDon" items="${hoaDons}" varStatus="loop">
                     <tr>
                         <td> ${loop.index+1} </td>
-                        <td>${hoaDon.ID}</td>
+                        <td>${hoaDon.maHoaDon}</td>
                         <td>${hoaDon.tongSp}</td>
                         <td>${hoaDon.tongTien}</td>
                         <td>${hoaDon.tenKH}</td>

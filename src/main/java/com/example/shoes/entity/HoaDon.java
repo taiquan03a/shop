@@ -2,6 +2,7 @@ package com.example.shoes.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -45,6 +46,10 @@ public class HoaDon {
     private String nguoiThanhToan;
     @Column(name = "id_status")
     private String idStatus;
+    @Column(name = "ma_hoa_don")
+    private String maHoaDon;
+    @Column(name = "time_line")
+    private String timeLine;
 
 //    @OneToMany(mappedBy = "hoa_don", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 //    List<HoaDonChiTietRepository> hoaDonChiTiets = new ArrayList<>();

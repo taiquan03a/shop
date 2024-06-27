@@ -1,6 +1,7 @@
 package com.example.shoes.service.Impl;
 
 import com.example.shoes.DTO.HoaDonDetailDTO;
+import com.example.shoes.DTO.TimeLineDTO;
 import com.example.shoes.entity.*;
 import com.example.shoes.repository.*;
 import com.example.shoes.request.CreateDonHangRequest;
@@ -33,6 +34,7 @@ public class HoaDonImpl implements HoaDonSerVice {
     public List<HoaDonRequest> getHoaDonRequests() {
         List<HoaDon> hoaDons = hoaDonRepository.findAll();
         List<HoaDonRequest> hoaDonRequests = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
         for(HoaDon hoaDon : hoaDons){
             long tongSl = 0,tongTien = 0;
             for(HoaDonChiTiet hoaDonChiTiet : hoaDonChiTietRepository.findHoaDonChiTietsByHoaDon(hoaDon)){
@@ -41,10 +43,11 @@ public class HoaDonImpl implements HoaDonSerVice {
             }
             HoaDonRequest hoaDonRequest = HoaDonRequest.builder()
                     .ID(hoaDon.getID())
+                    .maHoaDon(hoaDon.getMaHoaDon())
                     .tenKH(hoaDon.getKhachHang().getTenKhachHang())
                     .tongSp(tongSl)
                     .tongTien(tongTien)
-                    .ngayTao(hoaDon.getNgayTao())
+                    .ngayTao(sdf.format(hoaDon.getNgayTao()))
                     .trangThaiDon(hoaDon.getTrangThaiDon().getTenTrangThai())
                     .build();
             hoaDonRequests.add(hoaDonRequest);
@@ -72,20 +75,30 @@ public class HoaDonImpl implements HoaDonSerVice {
             giaTriGiamGia = hoaDon.getGiamGia().getGiaTriGiamGia();
         }
         List<TrangThaiDon> trangThaiDonList = new ArrayList<>();
+        List<TimeLineDTO> timeLineDTOList = new ArrayList<>();
         long idTrangThai = hoaDon.getTrangThaiDon().getID();
 
         List<String> idTrangThaiList = List.of(hoaDon.getIdStatus().split(","));
+        List<String> timeList = List.of(hoaDon.getTimeLine().split(","));
+        int index = 0;
         for(String id : idTrangThaiList){
             TrangThaiDon trangThaiDon = trangThaiDonRepository.findById(Long.parseLong(id)).get();
-            trangThaiDonList.add(trangThaiDon);
+            String time = timeList.get(index);
+            TimeLineDTO timeLineDTO = TimeLineDTO.builder()
+                    .time(time)
+                    .trangThaiDon(trangThaiDon)
+                    .build();
+            index++;
+            timeLineDTOList.add(timeLineDTO);
         }
         HoaDonDetailDTO hoaDonDetailDTO = HoaDonDetailDTO.builder()
                 .id(hoaDonId)
+                .maHoaDon(hoaDon.getMaHoaDon())
                 .tenKH(hoaDon.getKhachHang().getTenKhachHang())
                 .sdt(hoaDon.getSdtNguoiNhan())
                 .tenNguoiNhan(hoaDon.getKhachHang().getTenKhachHang())
+                .timeLineDTOList(timeLineDTOList)
                 .trangThai(hoaDon.getTrangThaiDon().getTenTrangThai())
-                .trangThaiDonList(trangThaiDonList)
                 .trangThaiDon(trangThaiDonRepository.findById(idTrangThai).get())
                 .hoaDonChiTietList(hoaDonChiTietRepository.findHoaDonChiTietsByHoaDon(hoaDon))
                 .tenGiamGia(tenGiamGia)
@@ -104,19 +117,34 @@ public class HoaDonImpl implements HoaDonSerVice {
 
         HoaDon hoaDon = hoaDonRepository.findById(hoaDonId).get();
         List<TrangThaiDon> trangThaiDonList = new ArrayList<>();
+        List<TimeLineDTO> timeLineDTOList = new ArrayList<>();
         long idTrangThai = hoaDon.getTrangThaiDon().getID();
         String status = hoaDon.getIdStatus();
+        String timeLine = hoaDon.getTimeLine();
+        Date now = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
+        String formattedDate = sdf.format(now);
         if(idTrangThai != 4 && idTrangThai != 5 && idTrangThai != 6) {
             idTrangThai += 1;
             status = status + "," + String.valueOf(idTrangThai);
+            timeLine = timeLine + "," + formattedDate;
         }
         List<String> idTrangThaiList = List.of(status.split(","));
+        List<String> timeLineList = List.of(timeLine.split(","));
+        int index = 0;
         for(String id : idTrangThaiList){
             TrangThaiDon trangThaiDon = trangThaiDonRepository.findById(Long.parseLong(id)).get();
-            trangThaiDonList.add(trangThaiDon);
+            String time = timeLineList.get(0);
+            TimeLineDTO timeLineDTO = TimeLineDTO.builder()
+                    .time(timeLineList.get(index))
+                    .trangThaiDon(trangThaiDon)
+                    .build();
+            index++;
+            timeLineDTOList.add(timeLineDTO);
         }
         hoaDon.setTrangThaiDon(trangThaiDonRepository.findById(idTrangThai).get());
         hoaDon.setIdStatus(status);
+        hoaDon.setTimeLine(timeLine);
         hoaDonRepository.save(hoaDon);
         String tenGiamGia = "khong dung";
         float giaTriGiamGia = 0;
@@ -126,11 +154,12 @@ public class HoaDonImpl implements HoaDonSerVice {
         }
         HoaDonDetailDTO hoaDonDetailDTO = HoaDonDetailDTO.builder()
                 .id(hoaDonId)
+                .maHoaDon(hoaDon.getMaHoaDon())
                 .tenKH(hoaDon.getKhachHang().getTenKhachHang())
                 .sdt(hoaDon.getSdtNguoiNhan())
                 .tenNguoiNhan(hoaDon.getKhachHang().getTenKhachHang())
                 .trangThai(hoaDon.getTrangThaiDon().getTenTrangThai())
-                .trangThaiDonList(trangThaiDonList)
+                .timeLineDTOList(timeLineDTOList)
                 .trangThaiDon(trangThaiDonRepository.findById(idTrangThai).get())
                 .hoaDonChiTietList(hoaDonChiTietRepository.findHoaDonChiTietsByHoaDon(hoaDon))
                 .tenGiamGia(tenGiamGia)
@@ -148,24 +177,39 @@ public class HoaDonImpl implements HoaDonSerVice {
     public HoaDonDetailDTO huyTrangThai(long hoaDonId) {
         HoaDon hoaDon = hoaDonRepository.findById(hoaDonId).get();
         List<TrangThaiDon> trangThaiDonList = new ArrayList<>();
-
+        List<TimeLineDTO> timeLineDTOList = new ArrayList<>();
         long idTrangThai = hoaDon.getTrangThaiDon().getID();
         String status = hoaDon.getIdStatus();
+        String timeLine = hoaDon.getTimeLine();
+        Date now = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
+        String formattedDate = sdf.format(now);
         if(idTrangThai != 4 && idTrangThai != 5 && idTrangThai != 6) {
             idTrangThai = 5;
             status = status + "," + String.valueOf(idTrangThai);
+            timeLine = timeLine + "," + formattedDate;
         } else if (idTrangThai == 4 && idTrangThai != 5 && idTrangThai != 6) {
             idTrangThai = 6;
             status = status + "," + String.valueOf(idTrangThai);
+            timeLine = timeLine + "," + formattedDate;
         }
 
         List<String> idTrangThaiList = List.of(status.split(","));
+        List<String> timeLineList = List.of(timeLine.split(","));
+        int index = 0;
         for(String id : idTrangThaiList){
             TrangThaiDon trangThaiDon = trangThaiDonRepository.findById(Long.parseLong(id)).get();
-            trangThaiDonList.add(trangThaiDon);
+            String time = timeLineList.get(0);
+            TimeLineDTO timeLineDTO = TimeLineDTO.builder()
+                    .time(timeLineList.get(index))
+                    .trangThaiDon(trangThaiDon)
+                    .build();
+            index++;
+            timeLineDTOList.add(timeLineDTO);
         }
         hoaDon.setTrangThaiDon(trangThaiDonRepository.findById(idTrangThai).get());
         hoaDon.setIdStatus(status);
+        hoaDon.setTimeLine(timeLine);
         hoaDonRepository.save(hoaDon);
         String tenGiamGia = "khong dung";
         float giaTriGiamGia = 0;
@@ -175,11 +219,12 @@ public class HoaDonImpl implements HoaDonSerVice {
         }
         HoaDonDetailDTO hoaDonDetailDTO = HoaDonDetailDTO.builder()
                 .id(hoaDonId)
+                .maHoaDon(hoaDon.getMaHoaDon())
                 .tenKH(hoaDon.getKhachHang().getTenKhachHang())
                 .sdt(hoaDon.getSdtNguoiNhan())
                 .tenNguoiNhan(hoaDon.getKhachHang().getTenKhachHang())
                 .trangThai(hoaDon.getTrangThaiDon().getTenTrangThai())
-                .trangThaiDonList(trangThaiDonList)
+                .timeLineDTOList(timeLineDTOList)
                 .trangThaiDon(trangThaiDonRepository.findById(idTrangThai).get())
                 .hoaDonChiTietList(hoaDonChiTietRepository.findHoaDonChiTietsByHoaDon(hoaDon))
                 .tenGiamGia(tenGiamGia)
@@ -203,11 +248,12 @@ public class HoaDonImpl implements HoaDonSerVice {
             bd = formatter.parse(batDau);
             kt = formatter.parse(ketThuc);
         }
-
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
         if(search != null && status != null && !batDau.isEmpty() && !ketThuc.isEmpty()) {
             List<HoaDonRequest> hoaDonRequests = new ArrayList<>();
+
             for (HoaDon hoaDon : hoaDons) {
-                if (hoaDon.getKhachHang().getTenKhachHang().contains(search) &&
+                if (hoaDon.getMaHoaDon().contains(search) &&
                         (hoaDon.getTrangThaiDon().getID() == Long.valueOf(status) || Long.valueOf(status) == 0)&&
                         hoaDon.getNgayTao().compareTo(bd) > 0 && hoaDon.getNgayTao().compareTo(kt) < 0) {
                     System.out.println("hihi");
@@ -218,15 +264,25 @@ public class HoaDonImpl implements HoaDonSerVice {
                     }
                     HoaDonRequest hoaDonRequest = HoaDonRequest.builder()
                             .ID(hoaDon.getID())
+                            .maHoaDon(hoaDon.getMaHoaDon())
                             .tenKH(hoaDon.getKhachHang().getTenKhachHang())
                             .tongSp(tongSl)
                             .tongTien(tongTien)
-                            .ngayTao(hoaDon.getNgayTao())
+                            .ngayTao(sdf.format(hoaDon.getNgayTao()))
                             .trangThaiDon(hoaDon.getTrangThaiDon().getTenTrangThai())
                             .build();
                     hoaDonRequests.add(hoaDonRequest);
                 }
             }
+            hoaDonRequests.sort(new Comparator<HoaDonRequest>() {
+                @Override
+                public int compare(HoaDonRequest o1, HoaDonRequest o2) {
+                    if(o1.getID() < o2.getID()){
+                        return 1;
+                    }
+                    return -1;
+                }
+            });
             return hoaDonRequests;
         }else if (search == null && status != null && !batDau.isEmpty() && !ketThuc.isEmpty()) {
             List<HoaDonRequest> hoaDonRequests = new ArrayList<>();
@@ -240,15 +296,25 @@ public class HoaDonImpl implements HoaDonSerVice {
                     }
                     HoaDonRequest hoaDonRequest = HoaDonRequest.builder()
                             .ID(hoaDon.getID())
+                            .maHoaDon(hoaDon.getMaHoaDon())
                             .tenKH(hoaDon.getKhachHang().getTenKhachHang())
                             .tongSp(tongSl)
                             .tongTien(tongTien)
-                            .ngayTao(hoaDon.getNgayTao())
+                            .ngayTao(sdf.format(hoaDon.getNgayTao()))
                             .trangThaiDon(hoaDon.getTrangThaiDon().getTenTrangThai())
                             .build();
                     hoaDonRequests.add(hoaDonRequest);
                 }
             }
+            hoaDonRequests.sort(new Comparator<HoaDonRequest>() {
+                @Override
+                public int compare(HoaDonRequest o1, HoaDonRequest o2) {
+                    if(o1.getID() < o2.getID()){
+                        return 1;
+                    }
+                    return -1;
+                }
+            });
             return hoaDonRequests;
         } else if (search == null && status == null && !batDau.isEmpty() && !ketThuc.isEmpty()) {
             List<HoaDonRequest> hoaDonRequests = new ArrayList<>();
@@ -261,20 +327,30 @@ public class HoaDonImpl implements HoaDonSerVice {
                     }
                     HoaDonRequest hoaDonRequest = HoaDonRequest.builder()
                             .ID(hoaDon.getID())
+                            .maHoaDon(hoaDon.getMaHoaDon())
                             .tenKH(hoaDon.getKhachHang().getTenKhachHang())
                             .tongSp(tongSl)
                             .tongTien(tongTien)
-                            .ngayTao(hoaDon.getNgayTao())
+                            .ngayTao(sdf.format(hoaDon.getNgayTao()))
                             .trangThaiDon(hoaDon.getTrangThaiDon().getTenTrangThai())
                             .build();
                     hoaDonRequests.add(hoaDonRequest);
                 }
             }
+            hoaDonRequests.sort(new Comparator<HoaDonRequest>() {
+                @Override
+                public int compare(HoaDonRequest o1, HoaDonRequest o2) {
+                    if(o1.getID() < o2.getID()){
+                        return 1;
+                    }
+                    return -1;
+                }
+            });
             return hoaDonRequests;
         }else if (search != null && status == null && batDau.isEmpty() && ketThuc.isEmpty()){
             List<HoaDonRequest> hoaDonRequests = new ArrayList<>();
             for (HoaDon hoaDon : hoaDons) {
-                if (hoaDon.getKhachHang().getTenKhachHang().contains(search)) {
+                if (hoaDon.getMaHoaDon().contains(search)) {
                     long tongSl = 0, tongTien = 0;
                     for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTietRepository.findHoaDonChiTietsByHoaDon(hoaDon)) {
                         tongSl += hoaDonChiTiet.getSoLuong();
@@ -282,15 +358,25 @@ public class HoaDonImpl implements HoaDonSerVice {
                     }
                     HoaDonRequest hoaDonRequest = HoaDonRequest.builder()
                             .ID(hoaDon.getID())
+                            .maHoaDon(hoaDon.getMaHoaDon())
                             .tenKH(hoaDon.getKhachHang().getTenKhachHang())
                             .tongSp(tongSl)
                             .tongTien(tongTien)
-                            .ngayTao(hoaDon.getNgayTao())
+                            .ngayTao(sdf.format(hoaDon.getNgayTao()))
                             .trangThaiDon(hoaDon.getTrangThaiDon().getTenTrangThai())
                             .build();
                     hoaDonRequests.add(hoaDonRequest);
                 }
             }
+            hoaDonRequests.sort(new Comparator<HoaDonRequest>() {
+                @Override
+                public int compare(HoaDonRequest o1, HoaDonRequest o2) {
+                    if(o1.getID() < o2.getID()){
+                        return 1;
+                    }
+                    return -1;
+                }
+            });
             return hoaDonRequests;
         } else if (search == null && status != null && batDau.isEmpty() && ketThuc.isEmpty()) {
             List<HoaDonRequest> hoaDonRequests = new ArrayList<>();
@@ -303,20 +389,30 @@ public class HoaDonImpl implements HoaDonSerVice {
                     }
                     HoaDonRequest hoaDonRequest = HoaDonRequest.builder()
                             .ID(hoaDon.getID())
+                            .maHoaDon(hoaDon.getMaHoaDon())
                             .tenKH(hoaDon.getKhachHang().getTenKhachHang())
                             .tongSp(tongSl)
                             .tongTien(tongTien)
-                            .ngayTao(hoaDon.getNgayTao())
+                            .ngayTao(sdf.format(hoaDon.getNgayTao()))
                             .trangThaiDon(hoaDon.getTrangThaiDon().getTenTrangThai())
                             .build();
                     hoaDonRequests.add(hoaDonRequest);
                 }
             }
+            hoaDonRequests.sort(new Comparator<HoaDonRequest>() {
+                @Override
+                public int compare(HoaDonRequest o1, HoaDonRequest o2) {
+                    if(o1.getID() < o2.getID()){
+                        return 1;
+                    }
+                    return -1;
+                }
+            });
             return hoaDonRequests;
         }else if (search != null && status == null && !batDau.isEmpty() && !ketThuc.isEmpty()) {
             List<HoaDonRequest> hoaDonRequests = new ArrayList<>();
             for (HoaDon hoaDon : hoaDons) {
-                if (hoaDon.getKhachHang().getTenKhachHang().contains(search) &&
+                if (hoaDon.getMaHoaDon().contains(search) &&
                         hoaDon.getNgayTao().compareTo(bd) > 0 && hoaDon.getNgayTao().compareTo(kt) < 0) {
                     long tongSl = 0, tongTien = 0;
                     for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTietRepository.findHoaDonChiTietsByHoaDon(hoaDon)) {
@@ -325,20 +421,30 @@ public class HoaDonImpl implements HoaDonSerVice {
                     }
                     HoaDonRequest hoaDonRequest = HoaDonRequest.builder()
                             .ID(hoaDon.getID())
+                            .maHoaDon(hoaDon.getMaHoaDon())
                             .tenKH(hoaDon.getKhachHang().getTenKhachHang())
                             .tongSp(tongSl)
                             .tongTien(tongTien)
-                            .ngayTao(hoaDon.getNgayTao())
+                            .ngayTao(sdf.format(hoaDon.getNgayTao()))
                             .trangThaiDon(hoaDon.getTrangThaiDon().getTenTrangThai())
                             .build();
                     hoaDonRequests.add(hoaDonRequest);
                 }
             }
+            hoaDonRequests.sort(new Comparator<HoaDonRequest>() {
+                @Override
+                public int compare(HoaDonRequest o1, HoaDonRequest o2) {
+                    if(o1.getID() < o2.getID()){
+                        return 1;
+                    }
+                    return -1;
+                }
+            });
             return hoaDonRequests;
         } else if (search != null && status != null && batDau.isEmpty() && ketThuc.isEmpty()) {
             List<HoaDonRequest> hoaDonRequests = new ArrayList<>();
             for (HoaDon hoaDon : hoaDons) {
-                if (hoaDon.getKhachHang().getTenKhachHang().contains(search) &&
+                if (hoaDon.getMaHoaDon().contains(search) &&
                         (hoaDon.getTrangThaiDon().getID() == Long.valueOf(status) || Long.valueOf(status) == 0)) {
                     long tongSl = 0, tongTien = 0;
                     for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTietRepository.findHoaDonChiTietsByHoaDon(hoaDon)) {
@@ -347,15 +453,25 @@ public class HoaDonImpl implements HoaDonSerVice {
                     }
                     HoaDonRequest hoaDonRequest = HoaDonRequest.builder()
                             .ID(hoaDon.getID())
+                            .maHoaDon(hoaDon.getMaHoaDon())
                             .tenKH(hoaDon.getKhachHang().getTenKhachHang())
                             .tongSp(tongSl)
                             .tongTien(tongTien)
-                            .ngayTao(hoaDon.getNgayTao())
+                            .ngayTao(sdf.format(hoaDon.getNgayTao()))
                             .trangThaiDon(hoaDon.getTrangThaiDon().getTenTrangThai())
                             .build();
                     hoaDonRequests.add(hoaDonRequest);
                 }
             }
+            hoaDonRequests.sort(new Comparator<HoaDonRequest>() {
+                @Override
+                public int compare(HoaDonRequest o1, HoaDonRequest o2) {
+                    if(o1.getID() < o2.getID()){
+                        return 1;
+                    }
+                    return -1;
+                }
+            });
             return hoaDonRequests;
         }
         return null;
@@ -422,6 +538,8 @@ public class HoaDonImpl implements HoaDonSerVice {
         }else{
             hinhThuc = "Chuyển khoản";
         }
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
+        String formattedDate = sdf.format(ngayHienTai);
         TrangThaiDon trangThaiDon = trangThaiDonRepository.findById(1L).get();
         HoaDon hoaDon = HoaDon.builder()
                 .khachHang(khachHang)
@@ -437,12 +555,25 @@ public class HoaDonImpl implements HoaDonSerVice {
                 .sdtNguoiNhan(khachHang.getSdt())
                 .trangThaiDon(trangThaiDon)
                 .idStatus("1")
+                .timeLine(formattedDate)
                 .build();
         if(check && giamGia != null){
             hoaDon.setGiamGia(giamGia);
             giamGia.setSoLuong(giamGia.getSoLuong()-1);
         }else {
             hoaDon.setGiamGia(null);
+        }
+        hoaDonRepository.save(hoaDon);
+        if(hoaDon.getID() < 1000){
+            if(hoaDon.getID() < 10){
+                hoaDon.setMaHoaDon("HD000" + String.valueOf(hoaDon.getID()));
+            } else if (hoaDon.getID() < 100) {
+                hoaDon.setMaHoaDon("HD00" + String.valueOf(hoaDon.getID()));
+            }else {
+                hoaDon.setMaHoaDon("HD00" + String.valueOf(hoaDon.getID()));
+            }
+        }else{
+            hoaDon.setMaHoaDon("HD" + String.valueOf(hoaDon.getID()));
         }
         hoaDonRepository.save(hoaDon);
         for(HoaDonChiTiet hoaDonChiTiet : hoaDonChiTietList){
