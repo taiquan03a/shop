@@ -126,7 +126,7 @@
                     <thead>
                     <tr>
                         <th>#</th>
-                        <th>Mã</th>
+                        <th>Mã hóa đơn</th>
                         <th>Tổng SP</th>
                         <th>Tổng số tiền</th>
                         <th>Tên khách hàng</th>
@@ -140,7 +140,7 @@
                     <c:forEach var="hoaDon" items="${hoaDons}" varStatus="loop">
                     <tr>
                         <td> ${loop.index+1} </td>
-                        <td>${hoaDon.ID}</td>
+                        <td>HD003</td>
                         <td>${hoaDon.tongSp}</td>
                         <td>${hoaDon.tongTien}</td>
                         <td>${hoaDon.tenKH}</td>
